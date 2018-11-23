@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +13,7 @@ import { MembersComponent } from './components/members/members.component';
 import { LoginComponent } from './components/login/login.component';
 
 // Services
+import { InterceptorService } from './services/interceptor/interceptor.service';
 import { AuthService } from './services/auth/auth.service';
 
 // Guards
@@ -38,7 +39,12 @@ import { SuperAdminGuard } from './guards/super-admin.guard';
     AuthService,
     AuthGuard,
     AdminGuard,
-    SuperAdminGuard
+    SuperAdminGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptorService,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
