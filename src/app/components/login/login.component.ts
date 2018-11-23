@@ -10,6 +10,8 @@ import { AuthService } from '../../services/auth/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  
+  loginUserData = {};
 
   constructor(
     private _authService: AuthService,
@@ -20,6 +22,18 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+  
+  loginUser() {
+    this._authService.loginUser(this.loginUserData)
+    .subscribe(
+      res => {
+        localStorage.setItem('token', res.token)
+        localStorage.setItem('user', JSON.stringify(res.user))
+        this._router.navigate(['/'])
+      },
+      err => console.log(err)
+    )
   }
 
 }
