@@ -15,6 +15,11 @@ import { LoginComponent } from './components/login/login.component';
 // Services
 import { AuthService } from './services/auth/auth.service';
 
+// Guards
+import { AuthGuard } from './guards/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
+import { SuperAdminGuard } from './guards/super-admin.guard';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +35,10 @@ import { AuthService } from './services/auth/auth.service';
     AppRoutingModule
   ],
   providers: [
-    AuthService
+    AuthService,
+    AuthGuard,
+    AdminGuard,
+    SuperAdminGuard
   ],
   bootstrap: [AppComponent]
 })
