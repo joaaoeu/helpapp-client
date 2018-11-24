@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth/auth.service';
 export class LoginComponent implements OnInit {
   
   loginUserData = {};
+  errorMessage = '';
 
   constructor(
     private _authService: AuthService,
@@ -25,6 +26,11 @@ export class LoginComponent implements OnInit {
   }
   
   loginUser() {
+    if(!this.loginUserData.email || !this.loginUserData.password) {
+      this.errorMessage = 'Email and password are required!';
+      return false;
+    }
+    
     this._authService.loginUser(this.loginUserData)
     .subscribe(
       res => {
@@ -32,7 +38,9 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('user', JSON.stringify(res.user))
         this._router.navigate(['/'])
       },
-      err => console.log(err)
+      err => {
+        this.errorMessage = err.error.message;
+      }
     )
   }
 

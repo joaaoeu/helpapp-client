@@ -16,6 +16,7 @@
               <label for="password">Password</label>
               <input type="password" class="form-control rounded-0" [(ngModel)]="loginUserData.password" name="password" required>
             </div>
+            <p class="error">{{errorMessage}}</p>
             <button type="button" (click)="loginUser()" class="btn btn-primary btn-block float-right">Login</button>
           </form>
         </div>
