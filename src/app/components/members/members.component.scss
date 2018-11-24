@@ -1,0 +1,44 @@
+.btn-new-member {
+  margin-bottom: 15px;
+}
+
+.table {
+  .loading {
+    text-align: center;
+    background-color: #FFF;
+    
+    svg {
+      font-size: 30px;
+      -moz-animation: spin 1.1s infinite linear;
+      -webkit-animation: spin 1.1s infinite linear;
+    }
+  }
+
+  .buttons {
+    text-align: center;
+
+    .btn-edit {
+      margin-right: 10px;
+    }
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  };
+}
+
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(360deg);
+  };
+}
