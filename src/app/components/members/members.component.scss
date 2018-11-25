@@ -2,23 +2,33 @@
   margin-bottom: 15px;
 }
 
-.table {
-  .loading {
-    text-align: center;
-    background-color: #FFF;
-    
-    svg {
-      font-size: 30px;
-      -moz-animation: spin 1.1s infinite linear;
-      -webkit-animation: spin 1.1s infinite linear;
-    }
-  }
+.error {
+  color: #FF0000;
+  text-align: center;
+}
 
+.loading {
+  text-align: center;
+  background-color: #FFF !important;
+  
+  svg {
+    font-size: 25px;
+    opacity: .6;
+    -moz-animation: spin 1.1s infinite linear;
+    -webkit-animation: spin 1.1s infinite linear;
+  }
+}
+
+.table {
   .buttons {
     text-align: center;
 
     .btn-edit {
       margin-right: 10px;
+      
+      @media (max-width: 767.98px) {
+        margin: 0 0 10px 0;
+      }
     }
   }
 }
