@@ -80,6 +80,7 @@ export class MembersComponent implements OnInit {
     
     if(!this.memberToEditData.name || !this.memberToEditData.email || !this.memberToEditData.userType) {
       this.errorMessage = 'All fields, excepts password, are required!';
+      this.requesting = false;
       return false;
     }
     
