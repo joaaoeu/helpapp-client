@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 // Components
 import { ListCardsComponent } from './components/list-cards/list-cards.component';
-import { ReportComponent } from './components/report/report.component';
 import { MembersComponent } from './components/members/members.component';
 import { LoginComponent } from './components/login/login.component';
 
@@ -17,11 +16,6 @@ const routes: Routes = [
     path: '',
     canActivate: [AuthGuard],
     component: ListCardsComponent
-  },
-  {
-    path: 'report',
-    canActivate: [AdminGuard],
-    component: ReportComponent
   },
   {
     path: 'members',

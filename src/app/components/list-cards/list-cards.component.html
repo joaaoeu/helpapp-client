@@ -1,3 +1,181 @@
-<p>
-  list-cards works!
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="float-left">Request Cards</h1>
+
+      <button type="button" class="btn btn-primary btn-new-member float-right" data-toggle="modal" data-target="#newRequestModal" (click)="resetNewRequestData()" [disabled]="requesting">
+        <i class="fas fa-plus"></i> New Request
+      </button>
+    </div>
+  </div>
+  
+  <div class="row" *ngIf="requestingCards">
+    <div class="col">
+      <div class="loading">
+        <i class="fas fa-spinner"></i>
+      </div>
+    </div>  
+  </div>
+  
+  <div class="row" *ngIf="requestCards.length === 0 && !requestingCards">
+    <div class="col">
+      <p class="fallback">No Request Cards yet.</p>
+    </div>  
+  </div>
+  
+  <ng-container *ngIf="requestCards.length !== 0 && !requestingCards">
+    <div class="row request-card" *ngFor="let requestCard of requestCards">
+      <div class="col">
+        <div class="card text-center">
+          <div class="card-header">
+            <strong>
+            {{
+              requestCard.status === 1
+              ? 'OPENED'
+              : requestCard.status === 2
+                ? 'CLOSED'
+                : requestCard.status === 3
+                  ? 'CANCELED'
+                  : null
+            }}
+            </strong>
+          </div>
+          <div class="card-body">
+            <p class="card-text" *ngIf="requestCard.creatorName && requestCard.creatorEmail">
+              <small>
+                <strong>Created by:</strong><br> {{ requestCard.creatorName }} ({{ requestCard.creatorEmail }})
+              </small>
+            </p>
+            <h2 class="card-title">{{ requestCard.name }}</h2>
+            <h6 class="card-title">
+              <strong>Support Product Model:</strong> {{ requestCard.productModel }}
+            </h6>
+            <p class="card-text">{{ requestCard.description }}</p>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editRequestModal" (click)="setRequestToEditData(requestCard)" [disabled]="requesting" *ngIf="(_authService.isAdmin() || _authService.isSuperAdmin()) && !requestCard.endAt">
+              <i class="fas fa-pen"></i>
+            </button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteRequestModal" (click)="setRequestToDeleteData(requestCard)" [disabled]="requesting" *ngIf="_authService.isAdmin() || _authService.isSuperAdmin()">
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </div>
+          <div class="card-footer text-muted">
+            <strong>Start at:</strong> {{ requestCard.startAt | date:'d/M/yy, h:mm a' }}
+            <span *ngIf="requestCard.endAt">
+              | <strong>End at:</strong> {{ requestCard.endAt | date:'d/M/yy, h:mm a' }}<br>
+              <small><strong>Time of service:</strong> {{ getTimeOfService(requestCard.startAt, requestCard.endAt) }}</small>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<!-- New Request Modal -->
+<div class="modal fade" id="newRequestModal" tabindex="-1" role="dialog" aria-labelledby="newRequestModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newRequestModal">New Request</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" [disabled]="requesting">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="form">
+        <div class="modal-body">
+          <p class="error">{{errorMessage}}</p>
+          <div class="form-group">
+            <label for="name">Title *</label>
+            <input type="text" class="form-control rounded-0" [(ngModel)]="newRequestData.name" name="name" required [disabled]="requesting">
+          </div>
+          <div class="form-group">
+            <label for="email">Support Product Model *</label>
+            <input type="email" class="form-control rounded-0" [(ngModel)]="newRequestData.productModel" name="productModel" required [disabled]="requesting">
+          </div>
+          <div class="form-group">
+            <label for="password">Description *</label>
+            <textarea class="form-control rounded-0" [(ngModel)]="newRequestData.description" name="description" required [disabled]="requesting"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" [disabled]="requesting">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="createNewRequest()" [disabled]="requesting">Create New Request</button>
+          <div class="loading" *ngIf="requesting">
+            <i class="fas fa-spinner"></i>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Request Modal -->
+<div class="modal fade" id="editRequestModal" tabindex="-1" role="dialog" aria-labelledby="editRequestModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editRequestModal">Edit Request</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" [disabled]="requesting">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="form">
+        <div class="modal-body">
+          <p class="error">{{errorMessage}}</p>
+          <div class="form-group">
+            <label for="name">Title *</label>
+            <input type="text" class="form-control rounded-0" [(ngModel)]="requestToEditData.name" name="name" required [disabled]="requesting">
+          </div>
+          <div class="form-group">
+            <label for="email">Support Product Model *</label>
+            <input type="email" class="form-control rounded-0" [(ngModel)]="requestToEditData.productModel" name="productModel" required [disabled]="requesting">
+          </div>
+          <div class="form-group">
+            <label for="password">Description *</label>
+            <textarea class="form-control rounded-0" [(ngModel)]="requestToEditData.description" name="description" required [disabled]="requesting"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="userType">Status *</label>
+            <select class="form-control rounded-0" [(ngModel)]="requestToEditData.status" name="status" required [disabled]="requesting">
+              <option [ngValue]="1">OPENED</option>
+              <option [ngValue]="2">CLOSED</option>
+              <option [ngValue]="3">CANCELED</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" [disabled]="requesting">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="saveRequest()" [disabled]="requesting">Save Request</button>
+          <div class="loading" *ngIf="requesting">
+            <i class="fas fa-spinner"></i>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete Request Modal -->
+<div class="modal fade" id="confirmDeleteRequestModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteRequestModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteRequestModal">Delete Request</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" [disabled]="requesting">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="error">{{errorMessage}}</p>
+        <p>You are about to delete <strong>{{requestToDeleteData.name}}</strong>, are you sure you want to do this?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" [disabled]="requesting">No</button>
+        <button type="button" class="btn btn-danger" (click)="deleteRequest()" [disabled]="requesting">Yes</button>
+        <div class="loading" *ngIf="requesting">
+          <i class="fas fa-spinner"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

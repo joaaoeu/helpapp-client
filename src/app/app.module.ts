@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 
 // Components
 import { ListCardsComponent } from './components/list-cards/list-cards.component';
-import { ReportComponent } from './components/report/report.component';
 import { MembersComponent } from './components/members/members.component';
 import { LoginComponent } from './components/login/login.component';
 
@@ -26,7 +25,6 @@ import { MembersService } from './services/members/members.service';
   declarations: [
     AppComponent,
     ListCardsComponent,
-    ReportComponent,
     MembersComponent,
     LoginComponent
   ],
