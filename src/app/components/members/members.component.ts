@@ -14,9 +14,26 @@ export class MembersComponent implements OnInit {
   requesting = false;
 
   members = [];
-  newMemberData = { userType: 3 };
-  memberToEditData = {};
-  memberToDeleteData = {};
+  newMemberData = {
+    name: '',
+    email: '',
+    password: '',
+    userType: 3
+  };
+  memberToEditData = {
+    _id: '',
+    name: '',
+    email: '',
+    password: '',
+    userType: 3
+  };
+  memberToDeleteData = {
+    _id: '',
+    name: '',
+    email: '',
+    password: '',
+    userType: 3
+  };
   errorMessage = '';
   
   constructor(private _membersService: MembersService) { }
@@ -38,7 +55,12 @@ export class MembersComponent implements OnInit {
   }
   
   resetNewMemberData() {
-    this.newMemberData = { userType: 3 };
+    this.newMemberData = {
+      name: '',
+      email: '',
+      password: '',
+      userType: 3
+    };
     this.errorMessage = '';
   }
   
@@ -65,6 +87,7 @@ export class MembersComponent implements OnInit {
     .subscribe(
       res => {
         this.members.unshift(res.user);
+        // @ts-ignore
         $('#newMemberModal').modal('hide');
         this.requesting = false;
       },
@@ -93,6 +116,7 @@ export class MembersComponent implements OnInit {
           
           return member;
         });
+        // @ts-ignore
         $('#editMemberModal').modal('hide');
         this.requesting = false;
       },
@@ -112,6 +136,7 @@ export class MembersComponent implements OnInit {
         this.members = this.members.filter((member) => {
           return member._id !== this.memberToDeleteData._id;
         });
+        // @ts-ignore
         $('#confirmDeleteMemberModal').modal('hide');
         this.requesting = false;
       },

@@ -16,9 +16,25 @@ export class ListCardsComponent implements OnInit {
   requesting = false;
 
   requestCards = [];
-  newRequestData = {};
-  requestToEditData = {};
-  requestToDeleteData = {};
+  newRequestData = {
+    name: '',
+    productModel: '',
+    description: ''
+  };
+  requestToEditData = {
+    _id: '',
+    name: '',
+    productModel: '',
+    description: '',
+    status: 1
+  };
+  requestToDeleteData = {
+    _id: '',
+    name: '',
+    productModel: '',
+    description: '',
+    status: 1
+  };
   errorMessage = '';
   
   constructor(
@@ -43,6 +59,7 @@ export class ListCardsComponent implements OnInit {
   }
   
   getTimeOfService(startAt, endAt) {
+    // @ts-ignore
     const timeOfService = new Date(endAt) - new Date(startAt);
     
     const days    = moment.duration(timeOfService).days();
@@ -53,7 +70,11 @@ export class ListCardsComponent implements OnInit {
   }
   
   resetNewRequestData() {
-    this.newRequestData = {};
+    this.newRequestData = {
+      name: '',
+      productModel: '',
+      description: ''
+    };
     this.errorMessage = '';
   }
   
@@ -80,6 +101,7 @@ export class ListCardsComponent implements OnInit {
     .subscribe(
       res => {
         this.requestCards.unshift(res.requestedCard);
+        // @ts-ignore
         $('#newRequestModal').modal('hide');
         this.requesting = false;
       },
@@ -108,6 +130,7 @@ export class ListCardsComponent implements OnInit {
           
           return requestCard;
         });
+        // @ts-ignore
         $('#editRequestModal').modal('hide');
         this.requesting = false;
       },
@@ -127,6 +150,7 @@ export class ListCardsComponent implements OnInit {
         this.requestCards = this.requestCards.filter((requestCard) => {
           return requestCard._id !== this.requestToDeleteData._id;
         });
+        // @ts-ignore
         $('#confirmDeleteRequestModal').modal('hide');
         this.requesting = false;
       },

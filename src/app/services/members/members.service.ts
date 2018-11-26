@@ -26,6 +26,7 @@ export class MembersService {
   }
   
   deleteMember(member) {
+    // @ts-ignore
     return this.http.delete<any>(this._membersUrl, new RequestOptions({
        body: member
     }));

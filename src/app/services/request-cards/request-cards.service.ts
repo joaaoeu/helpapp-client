@@ -26,6 +26,7 @@ export class RequestCardsService {
   }
   
   deleteRequest(request) {
+    // @ts-ignore
     return this.http.delete<any>(this._requestCardsUrl, new RequestOptions({
        body: request
     }));
